@@ -1,0 +1,24 @@
+# Job sekali-jalan (bukan layanan): dipanggil lewat `docker compose run --rm analisis ...`
+# GANTI OWNER/REPO dengan milikmu (huruf kecil semua).
+services:
+  analisis:
+    image: ghcr.io/OWNER/REPO:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+    # UID/GID host supaya file hasil bisa dibaca/ditulis pemilik host dan dashboard nanti
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    network_mode: "none"          # job ini tidak butuh jaringan sama sekali
+    environment:
+      TZ: ${TZ:?isi TZ di .env, harus sama dengan zona waktu log server (cek timedatectl)}
+    volumes:
+      - ${UFW_IN_DIR:-./ufw/in}:/data/in:ro
+      - ${UFW_OUT_DIR:-./ufw/hasil}:/data/hasil

@@ -1,0 +1,5 @@
+# Versi yang dipakai saat pengujian (Python 3.12). Samakan dengan versi lokalmu yang
+# menghasilkan data sebelumnya: pip freeze | grep -iE "^(pandas|numpy|scikit-learn)=="
+pandas==3.0.6
+numpy==2.5.4
+scikit-learn==1.9.1

@@ -1,2 +1,0 @@
-fecha,total_baris_ufw_block,total_baris_ipv4_publik,ip_unik,normal,port_scanner,burst,burst_plus_scanner,anomali_iso,retransmisi_dominan,dikenal,rentang24_dikenal,pertama_terlihat,terakhir_terlihat,cakupan_waktu,klaster_0,klaster_1,klaster_2,klaster_3
-25 Oct 2026,8675,4355,1969,1883,83,2,1,40,7,0,0,2026-10-25 00:00:30,2026-10-25 23:59:42,00:00:30 - 23:59:42,1533,311,61,64
