@@ -1,13 +1,14 @@
 # Job sekali-jalan (bukan layanan): dipanggil lewat `docker compose run --rm analisis ...`
 # GANTI OWNER/REPO dengan milikmu (huruf kecil semua).
 services:
+  # 1) Job analisis sekali-jalan: dipanggil lewat cron via deploy/run_harian.sh
   analisis:
     image: ghcr.io/OWNER/REPO:${IMAGE_TAG:-latest}
     build:
       context: .
       args:
         APP_VERSION: ${APP_VERSION:-dev}
-    # UID/GID host supaya file hasil bisa dibaca/ditulis pemilik host dan dashboard nanti
+    # UID/GID host supaya file hasil bisa dibaca/ditulis pemilik host dan dashboard
     user: "${APP_UID:-1000}:${APP_GID:-1000}"
     read_only: true
     tmpfs:
@@ -22,3 +23,27 @@ services:
     volumes:
       - ${UFW_IN_DIR:-./ufw/in}:/data/in:ro
       - ${UFW_OUT_DIR:-./ufw/hasil}:/data/hasil
+
+  # 2) Web dashboard monitoring: selalu berjalan, konsumsi RAM ~15MB (Python Alpine murni)
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    image: ufw-dashboard:latest
+    restart: unless-stopped
+    ports:
+      # Bind ke 127.0.0.1 agar hanya bisa diakses via SSH tunnel atau reverse proxy Nginx/UFW
+      - "${DASHBOARD_HOST:-127.0.0.1}:${DASHBOARD_PORT:-8080}:8080"
+    volumes:
+      - ${UFW_OUT_DIR:-./ufw/hasil}:/data/hasil:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      DATA_DIR: /data/hasil
+      PORT: "8080"
+

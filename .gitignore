@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# Lingkungan & konfigurasi sensitif
+.env
+
+# Data & log UFW
+ufw/in/
+ufw/hasil/
+ufw/logs/
+*.csv
+*.log

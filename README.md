@@ -22,6 +22,9 @@ sed -i 's#OWNER/REPO#<owner>/<repo>#' docker-compose.yml   # huruf kecil
 echo <PAT read:packages> | docker login ghcr.io -u <user> --password-stdin   # jika image private
 sudo usermod -aG adm "$USER"               # agar bisa membaca /var/log/ufw.log (login ulang)
 ./deploy/run_harian.sh 2026-11-03          # uji manual dengan tanggal yang log-nya masih ada
+
+# Jalankan dashboard web monitoring (konsumsi RAM ~15MB)
+docker compose up -d dashboard
 ```
 Cron (`crontab -e`):
 ```
@@ -29,9 +32,24 @@ Cron (`crontab -e`):
 ```
 Periksa `ufw/logs/harian.log` dan umur file `ufw/logs/terakhir_sukses`.
 
+### Akses Dashboard Web
+Dashboard ter-bind secara default ke `127.0.0.1:8080` (aman, tidak terekspos publik).
+Akses dari laptop via SSH Tunnel:
+```bash
+ssh -L 8080:127.0.0.1:8080 user@ip-server
+```
+Buka browser: `http://localhost:8080`
+
+Atau buka port khusus untuk IP publik admin via UFW di server:
+Ubah `DASHBOARD_HOST=0.0.0.0` di `.env`, lalu izinkan hanya IP admin:
+```bash
+sudo ufw allow from <IP_PUBLIK_ADMIN> to any port 8080 proto tcp
+```
+
 ## Pengembangan lokal
 ```bash
 pip install -r requirements.txt
 python -m unittest discover -s tests -v
 python analisis_harian.py --input ufw.log.1 ufw.log --tanggal 2026-11-03 --out-dir ufw/hasil
+python dashboard.py --data-dir ufw/hasil --port 8080
 ```

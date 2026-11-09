@@ -1,0 +1,14 @@
+FROM python:3.12-alpine
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+COPY dashboard.py .
+
+USER 10001
+EXPOSE 8080
+
+ENTRYPOINT ["python", "dashboard.py"]
+CMD ["--data-dir", "/data/hasil", "--host", "0.0.0.0", "--port", "8080"]
