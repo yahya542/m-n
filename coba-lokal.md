@@ -6,13 +6,16 @@ Panduan langkah demi langkah untuk menguji engine analisis dan dashboard web di 
 
 ## 1. Persiapan Lingkungan
 
-Pastikan virtual environment aktif dan dependensi terpasang:
+Muat ulang virtual environment agar path baru terbaca di shell Anda:
 ```bash
-# Aktifkan virtual environment lokal
+deactivate 2>/dev/null || true
 source .venv/bin/activate
 
-# Jalankan pengujian unit untuk memastikan seluruh kode valid
+# Jalankan pengujian unit untuk memastikan seluruh modul terpasang (19 tests)
 python -m unittest discover -s tests -v
+
+# Atau jalankan langsung via path venv:
+# .venv/bin/python -m unittest discover -s tests -v
 ```
 
 ---

@@ -1,4 +1,4 @@
-#!/home/yahya/ojs-26/oct/.venv/bin/python3
+#!/home/yahya/ojs-26/analisis/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
